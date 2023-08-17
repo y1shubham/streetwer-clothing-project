@@ -1,0 +1,68 @@
+#1st part
+import numpy as np
+
+# generate sample data
+l = 100 # number of samples
+N = 25 # number of features
+X = np.random.normal(size=(l,N))
+
+# compute covariance matrix and its eigenvalues and eigenvectors
+cov = np.cov(X.T)
+eigenvalues, eigenvectors = np.linalg.eig(cov)
+
+# sort eigenvalues in descending order
+idx = eigenvalues.argsort()[::-1]
+eigenvalues = eigenvalues[idx]
+eigenvectors = eigenvectors[:,idx]
+
+# compute principal components
+pcs = np.dot(X, eigenvectors)
+
+# compute variances
+variances = np.var(pcs, axis=0)
+
+# evaluate performance of PCA method
+total_variance = np.sum(np.var(X, axis=0))
+explained_variance = np.sum(variances)
+explained_variance_ratio = explained_variance / total_variance
+print('Explained variance ratio:', explained_variance_ratio)
+
+#2nd part
+import numpy as np
+import matplotlib.pyplot as plt
+
+def pca(X):
+# Subtract the mean of each column from X
+
+# Compute the mean of each column of X
+    mean_X = np.mean(X, axis=0)
+    
+    # Compute the centered data matrix
+    X_centered = X - mean_X
+    
+    # Compute the covariance matrix
+    cov_X = np.cov(X_centered.T)
+
+# Compute the eigenvectors and eigenvalues of the covariance matrix
+    eig_vals, eig_vecs = np.linalg.eig(cov_X)
+    
+    # Sort the eigenvectors in descending order of their corresponding eigenvalues
+    idxs = np.argsort(eig_vals)[::-1]
+    eig_vals = eig_vals[idxs]
+    eig_vecs = eig_vecs[:,idxs]
+    
+    # Compute the principal components
+    V = eig_vecs
+    
+    # Compute the variances corresponding to each principal component
+    variances = eig_vals / (X.shape[0] - 1)
+    
+    return V, variances
+    # Generate random data matrix
+X = np.random.normal(size=(200, 35))
+principal_components, variances = pca(X)
+plt.scatter(principal_components[:, 0], principal_components[:
+, 1])
+plt.xlabel('PC1 (Variance = {:.2f})'.format(variances[0]))
+plt.ylabel('PC2 (Variance = {:.2f})'.format(variances[1]))
+plt.show()
